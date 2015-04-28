@@ -4,10 +4,12 @@
 =====================================================
 :Info: See <http://docs.solusvm.com/v2/Default.htm#Developer/Admin-Api/Admin-Api.htm> for  API implementation.
 :Author: Benton Snyder <introspectr3@gmail.com>
+:Contributor: Timh Bergstroem <timh.bergstrom@gmail.com>
 :Website: Noumenal Designs <http://www.noumenaldesigns.com>
 :Date: $Date: 2013-08-15 22:27:40 -0600 (Thurs, 15 Aug 2013) $
 :Revision: $Revision: 0021 $
 :Description: Python library for interfacing with SolusVM <http://www.solusvm.com>
+:Changes: Updated to include new functionality; changeMemory, changeHardDisk and included the new functionality in changePlan
 """
 import requests
 
@@ -376,7 +378,7 @@ class SolusVM:
                 }
                 return self.sQuery(**data)
 
-        def changePlan(self, vserverid, plan):
+        def changePlan(self, vserverid, plan, change_hdd=False):
                 """Changes specified virtual server's plan.
                 http://docs.solusvm.com/v2/Content/Developer/Admin-Api/Virtual-Server-Functions/Change-Plan.htm
 
@@ -387,7 +389,8 @@ class SolusVM:
                 data = {
                         'action': 'vserver-change',
                         'vserverid': vserverid,
-                        'plan':plan
+                        'plan': plan,
+                        'changehdd': change_hdd
                 }
                 return self.sQuery(**data)
 
@@ -403,6 +406,36 @@ class SolusVM:
                         'action': 'vserver-changeowner',
                         'vserverid': vserverid,
                         'clientid': clientid
+                }
+                return self.sQuery(**data)
+
+        def changeMemory(self, vserverid, memory):
+                """Changes specified virtual server's RAM.
+                https://documentation.solusvm.com/display/DOCS/Change+Memory
+
+                :param vserverid: id of virtual server
+                :param memory: new memory in MB
+                :returns: json formatted string
+                """
+                data = {
+                        'action': 'vserver-change-memory',
+                        'vserverid': vserverid,
+                        'memory': memory
+                }
+                return self.sQuery(**data)
+
+        def changeHardDiskSize(self, vserverid, hdd):
+                """Changes specified virtual server's HDD size.
+                https://documentation.solusvm.com/display/DOCS/Change+Hard+Disk+Size
+
+                :param vserverid: id of virtual server
+                :param hdd: new harddisk size in GB
+                :returns: json formatted string
+                """
+                data = {
+                        'action': 'vserver-change-hdd',
+                        'vserverid': vserverid,
+                        'hdd': hdd
                 }
                 return self.sQuery(**data)
 
